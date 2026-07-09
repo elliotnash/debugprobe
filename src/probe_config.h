@@ -65,7 +65,9 @@ do { \
 
 // TODO tie this up with PICO_BOARD defines in the main SDK
 
-#ifdef DEBUG_ON_PICO 
+#if defined(DEBUG_ON_DAX_C43)
+#include "board_dax_c43_config.h"
+#elif defined(DEBUG_ON_PICO)
 #include "board_pico_config.h"
 #else
 #include "board_debug_probe_config.h"

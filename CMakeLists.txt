@@ -2,6 +2,13 @@ cmake_minimum_required(VERSION 3.12)
 
 set(CMAKE_BUILD_TYPE RelWithDebInfo)
 
+# DAX-C43 (Caffeinated Cockroach) is an RP2350 board with a Pico 2 pinout, so
+# force the Pico 2 SDK board before the SDK is initialised.
+option (DEBUG_ON_DAX_C43 "Compile firmware for the DAX-C43 board" OFF)
+if (DEBUG_ON_DAX_C43)
+    set(PICO_BOARD pico2)
+endif ()
+
 include(pico_sdk_import.cmake)
 
 set(FREERTOS_KERNEL_PATH ${CMAKE_CURRENT_LIST_DIR}/freertos)
@@ -64,6 +71,15 @@ add_dependencies(debugprobe version)
 target_compile_definitions (debugprobe PRIVATE
 	PICO_RP2040_USB_DEVICE_ENUMERATION_FIX=1
 )
+
+if (DEBUG_ON_DAX_C43)
+    target_compile_definitions (debugprobe PRIVATE
+	DEBUG_ON_DAX_C43=1
+    )
+    set_target_properties(debugprobe PROPERTIES
+        OUTPUT_NAME "debugprobe_on_dax_c43"
+    )
+endif ()
 
 option (DEBUG_ON_PICO "Compile firmware for the Pico instead of Debug Probe" OFF)
 if (DEBUG_ON_PICO)

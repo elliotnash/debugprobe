@@ -142,7 +142,7 @@ char const* string_desc_arr [] =
   "CDC-ACM UART Interface", // 6: Interface descriptor for CDC
 };
 
-static uint16_t _desc_str[32];
+static uint16_t _desc_str[64];
 
 // Invoked when received GET STRING DESCRIPTOR request
 // Application return pointer to descriptor, whose contents must exist long enough for transfer to complete
@@ -164,9 +164,10 @@ uint16_t const* tud_descriptor_string_cb(uint8_t index, uint16_t langid)
 
     const char* str = string_desc_arr[index];
 
-    // Cap at max char
+    // Cap at max char (buffer holds a 1-word header plus the string)
     chr_count = strlen(str);
-    if ( chr_count > 31 ) chr_count = 31;
+    const uint8_t max_count = (sizeof(_desc_str) / sizeof(_desc_str[0])) - 1;
+    if ( chr_count > max_count ) chr_count = max_count;
 
     for(uint8_t i=0; i<chr_count; i++)
     {

@@ -71,6 +71,20 @@ cmake -DDEBUG_ON_PICO=1 -DPICO_BOARD=pico2 ../
 
 This will build with the configuration for the Pico 2 and call the output program `debugprobe_on_pico2.uf2`.
 
+## Building for DAX-C43
+
+DAX-C43 ("Caffeinated Cockroach") is a custom RP2350 debugger board with a Pico 2 pinout. Building for it selects the Pico 2 SDK board automatically, so you only need to pass the one option:
+
+```bash
+git submodule sync
+git submodule update --init --recursive
+mkdir build-dax-c43
+cd build-dax-c43
+cmake -DDEBUG_ON_DAX_C43=ON ../
+```
+
+This calls the output program `debugprobe_on_dax_c43.uf2` and makes the probe enumerate as `Raspberry Pi Debugprobe on DAX-C43 (CMSIS-DAP)`. As with the Pico 2, `PICO_SDK_PATH` must point to a version 2.0.0 or greater install, and you must use a fresh build directory.
+
 ## AutoBaud Mode
 
 Mode which automatically detects and sets the UART baud rate as data arrives.
