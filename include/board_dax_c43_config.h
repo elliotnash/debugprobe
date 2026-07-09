@@ -51,6 +51,10 @@
 
 #define PROBE_USB_CONNECTED_LED 25
 
+// Board sense: target 3V3 rail, read via ADC0 (GPIO26)
+#define PROBE_PIN_BOARD_SENSE 26
+#define PROBE_BOARD_SENSE_ADC 0
+
 #define PROBE_PRODUCT_STRING "Debugprobe on DAX-C43 (CMSIS-DAP)"
 
 #endif

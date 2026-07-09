@@ -29,6 +29,10 @@ void bi_decl_config()
     bi_decl(bi_1pin_with_name(PROBE_PIN_SWDIOEN, "PROBE SWDIOEN"));
 #endif
 
+#ifdef PROBE_PIN_BOARD_SENSE
+    bi_decl(bi_1pin_with_name(PROBE_PIN_BOARD_SENSE, "PROBE BOARD SENSE"));
+#endif
+
 #ifdef PROBE_CDC_UART
     bi_decl(bi_program_feature("PROBE UART INTERFACE " STR(PROBE_UART_INTERFACE)));
     bi_decl(bi_program_feature("PROBE UART BAUDRATE " STR(PROBE_UART_BAUDRATE)));

@@ -85,6 +85,13 @@
 
 #endif
 
+/* Board sense config - omit both if the board has no target voltage sense.
+ * When defined, the DAP vendor command ID_DAP_Vendor0 reports whether the
+ * target rail is powered, plus the raw 12-bit ADC counts. The pin must be
+ * ADC-capable, and PROBE_BOARD_SENSE_ADC is its ADC channel number. */
+#define PROBE_PIN_BOARD_SENSE 26
+#define PROBE_BOARD_SENSE_ADC 0
+
 /* LED config - some or all of these can be omitted if not used */
 #define PROBE_USB_CONNECTED_LED 2
 #define PROBE_DAP_CONNECTED_LED 15

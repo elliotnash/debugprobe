@@ -46,6 +46,9 @@
 #include "tusb_edpt_handler.h"
 #include "DAP.h"
 #include "hardware/structs/usb.h"
+#ifdef PROBE_PIN_BOARD_SENSE
+#include "hardware/adc.h"
+#endif
 
 // UART0 for debugprobe debug
 // UART1 for debugprobe to target device
@@ -151,6 +154,15 @@ int main(void) {
     board_init();
     usb_serial_init();
     cdc_uart_init();
+#ifdef PROBE_PIN_BOARD_SENSE
+    adc_init();
+    adc_gpio_init(PROBE_PIN_BOARD_SENSE);
+    /* adc_gpio_init() disables the pulls, which would leave the sense pin
+       floating with no target attached. Re-enable the pull-down so an
+       unconnected pin reads ~0V. Safe despite RP2350-E9: that erratum needs
+       the pad's digital input buffer enabled, and adc_gpio_init() clears it. */
+    gpio_pull_down(PROBE_PIN_BOARD_SENSE);
+#endif
     tusb_init();
     stdio_uart_init();
 

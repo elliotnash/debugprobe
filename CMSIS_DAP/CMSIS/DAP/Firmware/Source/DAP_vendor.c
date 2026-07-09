@@ -28,6 +28,14 @@
 #include "DAP_config.h"
 #include "DAP.h"
 
+#ifdef PROBE_PIN_BOARD_SENSE
+#include "hardware/adc.h"
+
+/* Target is considered present and powered above ~2.0V.
+   12-bit conversion, 3.3V full scale: 2.0 * 4095 / 3.3 = 2482. */
+#define BOARD_SENSE_THRESHOLD 2482U
+#endif
+
 //**************************************************************************************************
 /** 
 \defgroup DAP_Vendor_Adapt_gr Adapt Vendor Commands
@@ -51,12 +59,18 @@ uint32_t DAP_ProcessVendorCommand(const uint8_t *request, uint8_t *response) {
   *response++ = *request;        // copy Command ID
 
   switch (*request++) {          // first byte in request is Command ID
-    case ID_DAP_Vendor0:
-#if 0                            // example user command
-      num += 1U << 16;           // increment request count
-      if (*request == 1U) {      // when first command data byte is 1
-        *response++ = 'X';       // send 'X' as response
-        num++;                   // increment response count
+    case ID_DAP_Vendor0:           // Read board sense: is a target attached and powered?
+#ifdef PROBE_PIN_BOARD_SENSE
+      {
+        uint16_t raw;
+
+        adc_select_input(PROBE_BOARD_SENSE_ADC);
+        raw = adc_read();
+
+        *response++ = (raw > BOARD_SENSE_THRESHOLD) ? 1U : 0U;
+        *response++ = (uint8_t)(raw & 0xffU);   // raw counts, little-endian
+        *response++ = (uint8_t)(raw >> 8);
+        num += 3U;                              // three extra response bytes
       }
 #endif
       break;
